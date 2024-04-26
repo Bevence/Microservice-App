@@ -1,0 +1,39 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-srv
+  namespace: kafka
+  labels:
+    name: ingress-srv
+  annotations:
+    nginx.ingress.kubernetes.io/session-cookie-name: kafka-ui
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: api-docs.editor.dev
+      http:
+        paths:
+        - pathType: Prefix
+          path: /api/v1/auth
+          backend:
+            service:
+              name: auth-srv
+              port: 
+                number: 4000
+    - host: docs.editor.dev
+      http:
+        paths:
+        - path: /k8s
+          pathType: Prefix
+          backend:
+            service:
+              name: kafka-ui-srv
+              port:
+                number: 8080
+        - pathType: Prefix
+          path: /
+          backend:
+            service:
+              name: client-srv
+              port: 
+                number: 3000

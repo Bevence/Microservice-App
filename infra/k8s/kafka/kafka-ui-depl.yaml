@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-ui-depl
+  namespace: kafka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-ui
+  template:
+    metadata:
+      labels:
+        network/kafka-network: "true"
+        app: kafka-ui
+    spec:
+      containers:
+        - name: kafka-ui
+          image: provectuslabs/kafka-ui
+          ports:
+            - containerPort: 8080
+          env:
+            - name: KAFKA_CLUSTERS_0_NAME
+              value: "kafka-prod-cluster"
+            - name: KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS
+              value: kafka-cluster-kafka-bootstrap:9092
+            - name: SERVER_SERVLET_CONTEXT_PATH
+              valueFrom:
+                secretKeyRef:
+                  name: kafka-ui-secret
+                  key: BASE_URL
+            - name: AUTH_TYPE
+              valueFrom:
+                secretKeyRef:
+                  name: kafka-ui-secret
+                  key: AUTH_TYPE
+            - name: SPRING_SECURITY_USER_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: kafka-ui-secret
+                  key: SPRING_SECURITY_USER_NAME
+            - name: SPRING_SECURITY_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: kafka-ui-secret
+                  key: SPRING_SECURITY_USER_PASSWORD
+#           resources:
+#             requests:
+#               cpu: 100m
+#               memory: 64Mi
+#             limits:
+#               cpu: 200m
+#               memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-ui-srv
+  namespace: kafka
+spec:
+  selector:
+    app: kafka-ui
+  ports:
+    - name: kafka-ui
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
