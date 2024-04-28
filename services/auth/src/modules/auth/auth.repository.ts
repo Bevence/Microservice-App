@@ -20,7 +20,7 @@ export class AuthRepository {
         });
         await this.producer.send({
           data: [user],
-          event: 'CREATED',
+          event: KAFKA_EVENT.CREATED,
           key: user.id,
         });
         return user;

@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 
 const prismaClient = new PrismaClient();
 
@@ -7,13 +8,13 @@ async function main() {
     {
       fullName: 'User One',
       email: 'user_one@mailinator.com',
-      password: 'Password@123',
+      password: await bcrypt.hash('Password@123', 10),
       userName: 'user1',
     },
     {
       fullName: 'User Two',
       email: 'user_two@mailinator.com',
-      password: 'Password@123',
+      password: await bcrypt.hash('Password@123', 10),
       userName: 'user2',
     },
   ];

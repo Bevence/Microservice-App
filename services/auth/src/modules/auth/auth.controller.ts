@@ -6,25 +6,19 @@ import {
   Patch,
   Param,
   Delete,
-  Next,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
-import { NextFunction } from 'express';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post()
-  signUp(@Body() createAuthDto: CreateAuthDto, @Next() next: NextFunction) {
-    try {
-      return this.authService.create(createAuthDto);
-    } catch (error) {
-      console.log('error', error);
-      next(error);
-    }
+  async signUp(@Body() createAuthDto: CreateAuthDto) {
+    const data = await this.authService.create(createAuthDto);
+    return data;
   }
 
   @Get()
