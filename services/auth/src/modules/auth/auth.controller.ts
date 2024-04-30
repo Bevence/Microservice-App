@@ -12,6 +12,7 @@ import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { LoginDto } from './dto/login-user.dto';
+import { AUTH_CONSTANTS } from './auth.constant';
 
 @Controller('auth')
 export class AuthController {
@@ -19,12 +20,17 @@ export class AuthController {
 
   @Post()
   async signUp(@Body() createAuthDto: CreateAuthDto) {
-    return this.authService.create(createAuthDto);
+    await this.authService.create(createAuthDto);
+    return { message: AUTH_CONSTANTS.SUCCESS_MESSAGE.SIGNUP_SUCCESS };
   }
 
   @Post('login')
   async login(@Body() loginDto: LoginDto) {
-    return this.authService.login(loginDto);
+    const user = await this.authService.login(loginDto);
+    return {
+      message: AUTH_CONSTANTS.SUCCESS_MESSAGE.LOGIN_SUCCESS,
+      data: user,
+    };
   }
 
   @Get()
