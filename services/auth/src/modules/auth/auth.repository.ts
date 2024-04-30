@@ -4,6 +4,7 @@ import { UpdateAuthDto } from './dto/update-auth.dto';
 import { PrismaService } from 'src/utilities/prisma/prisma.service';
 import { AuthProducer } from './auth.producer';
 import { KAFKA_EVENT } from 'src/utilities/kafka/kafka.event';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class AuthRepository {
@@ -31,12 +32,14 @@ export class AuthRepository {
     }
   }
 
-  findAll() {
-    return `This action returns all auth`;
+  findOne(whereQuery: Prisma.UserWhereUniqueInput) {
+    return this.prismaService.user.findUnique({
+      where: whereQuery,
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
+  findAll() {
+    return `This action returns all auth`;
   }
 
   update(id: number, updateAuthDto: UpdateAuthDto) {

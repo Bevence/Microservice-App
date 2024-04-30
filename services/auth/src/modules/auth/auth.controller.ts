@@ -11,6 +11,7 @@ import {
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
+import { LoginDto } from './dto/login-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -18,8 +19,12 @@ export class AuthController {
 
   @Post()
   async signUp(@Body() createAuthDto: CreateAuthDto) {
-    const data = await this.authService.create(createAuthDto);
-    return data;
+    return this.authService.create(createAuthDto);
+  }
+
+  @Post('login')
+  async login(@Body() loginDto: LoginDto) {
+    return this.authService.login(loginDto);
   }
 
   @Get()

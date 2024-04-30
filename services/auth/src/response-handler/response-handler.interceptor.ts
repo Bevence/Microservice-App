@@ -1,0 +1,47 @@
+import {
+  CallHandler,
+  ExecutionContext,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NestInterceptor,
+} from '@nestjs/common';
+import { Observable, catchError, map, throwError } from 'rxjs';
+
+@Injectable()
+export class ResponseHandlerInterceptor implements NestInterceptor {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+    return next.handle().pipe(
+      map((res: unknown) => this.responseHandler(res, context)),
+      catchError((err: HttpException) =>
+        throwError(() => this.errorHandler(err, context)),
+      ),
+    );
+  }
+
+  responseHandler(res: any, context: ExecutionContext) {
+    const ctx = context.switchToHttp();
+    const response = ctx.getResponse();
+    const request = ctx.getRequest();
+    const status = response.statusCode;
+
+    response.status(status).json({
+      success: true,
+      data: res,
+    });
+  }
+
+  errorHandler(err: HttpException, context: ExecutionContext) {
+    const ctx = context.switchToHttp();
+    const response = ctx.getResponse();
+    const request = ctx.getRequest();
+    const status = err.getStatus() || HttpStatus.INTERNAL_SERVER_ERROR;
+
+    response.status(status).json({
+      statusCode: status,
+      timestamp: new Date().toISOString(),
+      path: request.url,
+      message: err.message,
+    });
+  }
+}
