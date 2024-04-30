@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  NotFoundException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
@@ -23,7 +24,7 @@ export class AuthController {
 
   @Get()
   findAll() {
-    return this.authService.findAll();
+    throw new NotFoundException('Not found');
   }
 
   @Get(':id')
