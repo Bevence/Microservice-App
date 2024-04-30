@@ -13,6 +13,8 @@ import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { LoginDto } from './dto/login-user.dto';
 import { AUTH_CONSTANTS } from './auth.constant';
+import { plainToInstance } from 'class-transformer';
+import { LoginResponseDto } from './dto/auth-response.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -29,7 +31,9 @@ export class AuthController {
     const user = await this.authService.login(loginDto);
     return {
       message: AUTH_CONSTANTS.SUCCESS_MESSAGE.LOGIN_SUCCESS,
-      data: user,
+      data: plainToInstance(LoginResponseDto, user, {
+        excludeExtraneousValues: true,
+      }),
     };
   }
 

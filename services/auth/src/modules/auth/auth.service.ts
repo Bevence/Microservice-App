@@ -6,10 +6,14 @@ import { UpdateAuthDto } from './dto/update-auth.dto';
 import { AuthRepository } from './auth.repository';
 import { LoginDto } from './dto/login-user.dto';
 import { AUTH_CONSTANTS } from './auth.constant';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  constructor(private repository: AuthRepository) {}
+  constructor(
+    private repository: AuthRepository,
+    private jwtService: JwtService,
+  ) {}
 
   create(payload: CreateAuthDto) {
     return this.repository.create(payload);
@@ -26,7 +30,13 @@ export class AuthService {
     if (!isValidPassword)
       throw new NotFoundException(AUTH_CONSTANTS.ERROR_MESSAGE.USER_NOT_FOUND);
 
-    return user;
+    const accessToken = this.jwtService.sign({
+      id: user.id,
+      fullName: user.fullName,
+      email: user.email,
+      userName: user.userName,
+    });
+    return { ...user, accessToken };
   }
 
   findOne(id: number) {
