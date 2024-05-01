@@ -5,6 +5,8 @@ import { validate } from './env.validation';
 import { PrismaModule } from './utilities/prisma/prisma.module';
 import { KafkaModule } from './utilities/kafka/kafka.module';
 import { JwtModule } from '@nestjs/jwt';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthenticationMiddleware } from './middleware/authentication/authentication.middleware';
 
 @Module({
   imports: [
@@ -21,6 +23,12 @@ import { JwtModule } from '@nestjs/jwt';
     KafkaModule,
     AuthModule,
     // UsersModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthenticationMiddleware,
+    },
   ],
 })
 export class AppModule {}

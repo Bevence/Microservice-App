@@ -27,9 +27,7 @@ export class ResponseHandlerInterceptor implements NestInterceptor {
 
     response.status(status).json({
       success: true,
-      ...(res.message && { message: res.message }),
-      ...(res.data && { data: res.data }),
-      ...(res.totalCount && { totalCount: res.totalCount }),
+      ...res,
     });
   }
 
@@ -37,7 +35,7 @@ export class ResponseHandlerInterceptor implements NestInterceptor {
     const ctx = context.switchToHttp();
     const response = ctx.getResponse();
     const request = ctx.getRequest();
-    const status = err.getStatus() || HttpStatus.INTERNAL_SERVER_ERROR;
+    const status = err.getStatus || HttpStatus.INTERNAL_SERVER_ERROR;
 
     response.status(status).json({
       statusCode: status,
