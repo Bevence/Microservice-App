@@ -5,9 +5,11 @@ import {
   HttpStatus,
   Injectable,
   NestInterceptor,
+  PreconditionFailedException,
 } from '@nestjs/common';
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { IResponsePayload } from './response-handler.interface';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class ResponseHandlerInterceptor implements NestInterceptor {
@@ -23,7 +25,7 @@ export class ResponseHandlerInterceptor implements NestInterceptor {
   responseHandler(res: IResponsePayload, context: ExecutionContext) {
     const ctx = context.switchToHttp();
     const response = ctx.getResponse();
-    const status = response.statusCode;
+    const status = response.statusCode();
 
     response.status(status).json({
       success: true,
@@ -32,11 +34,13 @@ export class ResponseHandlerInterceptor implements NestInterceptor {
   }
 
   errorHandler(err: HttpException, context: ExecutionContext) {
+    console.log('err precondition', err instanceof PreconditionFailedException);
+    console.log('err prisma', err instanceof PrismaClientKnownRequestError);
     const ctx = context.switchToHttp();
     const response = ctx.getResponse();
     const request = ctx.getRequest();
-    const status = err.getStatus || HttpStatus.INTERNAL_SERVER_ERROR;
-
+    const status = err.getStatus() || HttpStatus.INTERNAL_SERVER_ERROR;
+    console.log('err.response.message', err.getResponse()['message']);
     response.status(status).json({
       statusCode: status,
       timestamp: new Date().toISOString(),

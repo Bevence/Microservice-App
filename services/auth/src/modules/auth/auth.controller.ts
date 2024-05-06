@@ -44,7 +44,6 @@ export class AuthController {
 
   @Get()
   findAll(@Req() req: Request) {
-    console.log('req', req.user);
     throw new NotFoundException('Not found');
   }
 
