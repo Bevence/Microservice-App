@@ -43,6 +43,9 @@ async function bootstrap() {
   // app.useGlobalInterceptors(new ResponseHandlerInterceptor());
 
   app.setGlobalPrefix('/api/v1/auth');
-  await app.listen(appConfig.PORT || 4000);
+  const port = appConfig.PORT || 4000;
+  await app.listen(port, () => {
+    console.log(`🚀 Server is up and running on http://localhost:${port}`);
+  });
 }
 bootstrap();

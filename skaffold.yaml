@@ -18,6 +18,14 @@ build:
             src: src/**/*.ts
       docker:
         dockerfile: Dockerfile
+    - image: iambks/conversation
+      context: services/conversation
+      sync:
+        manual:
+          - dest: .
+            src: src/**/*.ts
+      docker:
+        dockerfile: Dockerfile
 manifests:
   rawYaml:
     - infra/k8s/deployments/*

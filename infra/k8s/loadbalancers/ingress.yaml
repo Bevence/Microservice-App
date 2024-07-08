@@ -20,6 +20,13 @@ spec:
               name: auth-srv
               port: 
                 number: 4000
+        - pathType: Prefix
+          path: /api/v1/conversation
+          backend:
+            service:
+              name: conversation-srv
+              port: 
+                number: 4001
     - host: docs.editor.dev
       http:
         paths:

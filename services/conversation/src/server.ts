@@ -7,5 +7,7 @@ config();
 const port = process.env.PORT;
 
 app.listen(port, () => {
-  console.log(`🚀 Server is up and running on http://localhost:${port}`);
+  console.log(
+    `🚀 Conversation Server is up and running on http://localhost:${port}`
+  );
 });

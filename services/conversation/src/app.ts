@@ -9,4 +9,8 @@ app.use(
 );
 app.use(cors({ origin: "*", optionsSuccessStatus: 200 }));
 
+app.get("/api/v1/conversation/ping", (req, res) =>
+  res.send("pong from conversation service")
+);
+
 export default app;

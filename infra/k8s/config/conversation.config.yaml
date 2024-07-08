@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: conversation-config
+  namespace: kafka
+data:
+  PORT: "4001"
+  NODE_ENV: "development"

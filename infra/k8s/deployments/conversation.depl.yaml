@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: conversation-depl
+  namespace: kafka
+spec:
+  selector:
+    matchLabels:
+      app: conversation
+  template:
+    metadata:
+      labels:
+        app: conversation
+    spec:
+      containers:
+      - name: conversation
+        image: iambks/conversation
+        env:
+          - name: PORT
+            valueFrom:
+              configMapKeyRef:
+                name: conversation-config
+                key: PORT
+          - name: NODE_ENV
+            valueFrom:
+              configMapKeyRef:
+                name: conversation-config
+                key: NODE_ENV
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: conversation-secret
+                key: DATABASE_URL
+          - name: KAFKA_HOST
+            valueFrom:
+              secretKeyRef:
+                name: kafka-secret
+                key: KAFKA_HOST
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: conversation-srv
+  namespace: kafka
+spec:
+  selector:
+    app: conversation
+  ports:
+  - name: conversation
+    protocol: TCP
+    port: 4001
+    targetPort: 4001
+
