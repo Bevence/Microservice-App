@@ -1,0 +1,5 @@
+export enum KAFKA_EVENT {
+  CREATED = 'CREATED',
+  UPDATED = 'UPDATED',
+  DELETED = 'DELETED',
+}

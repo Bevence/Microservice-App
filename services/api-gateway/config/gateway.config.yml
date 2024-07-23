@@ -1,0 +1,38 @@
+http:
+  port: ${PORT}
+apiEndpoints:
+  authApiEndPoints:
+    paths: '/api/v1/auth/*'
+    methods: ["GET", "POST", "OPTIONS"]
+  conversationApiEndpoints:
+    paths: '/api/v1/conversation/*'
+    methods: ["GET", "POST", "OPTIONS"]
+serviceEndpoints:
+  authService:
+    url: 'http://auth-srv:4000'
+  conversationService:
+    url: 'http://conversation-srv:4001'
+policies:
+  - basic-auth
+  - cors
+  - expression
+  - key-auth
+  - log
+  - oauth2
+  - proxy
+  - rate-limit
+pipelines:
+  authPipeline:
+    apiEndpoints:
+      - authApiEndPoints
+    policies:
+      - proxy:
+          - action:
+              serviceEndpoint: authService 
+  conversationPipeline:
+    apiEndpoints:
+      - conversationApiEndpoints
+    policies:
+      - proxy:
+          - action:
+              serviceEndpoint: conversationService 

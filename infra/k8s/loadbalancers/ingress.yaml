@@ -13,20 +13,30 @@ spec:
     - host: api-docs.editor.dev
       http:
         paths:
-        - pathType: Prefix
-          path: /api/v1/auth
-          backend:
-            service:
-              name: auth-srv
-              port: 
-                number: 4000
-        - pathType: Prefix
-          path: /api/v1/conversation
-          backend:
-            service:
-              name: conversation-srv
-              port: 
-                number: 4001
+          - pathType: Prefix
+            path: /api/v1
+            backend:
+              service:
+                name: api-gateway-srv
+                port:
+                  number: 8000
+    # - host: api-docs.editor.dev
+    #   http:
+    #     paths:
+    #     - pathType: Prefix
+    #       path: /api/v1/auth
+    #       backend:
+    #         service:
+    #           name: auth-srv
+    #           port: 
+    #             number: 4000
+    #     - pathType: Prefix
+    #       path: /api/v1/conversation
+    #       backend:
+    #         service:
+    #           name: conversation-srv
+    #           port: 
+    #             number: 4001
     - host: docs.editor.dev
       http:
         paths:

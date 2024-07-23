@@ -19,12 +19,12 @@ import { LoginResponseDto } from './dto/auth-response.dto';
 import { IsPublic } from 'src/custom-decorator/is-public/is-public.decorator';
 import { Request } from 'express';
 
-@Controller('auth')
+@Controller()
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @IsPublic()
-  @Post()
+  @Post('signup')
   async signUp(@Body() createAuthDto: CreateAuthDto) {
     await this.authService.create(createAuthDto);
     return { message: AUTH_CONSTANTS.SUCCESS_MESSAGE.SIGNUP_SUCCESS };
@@ -40,25 +40,5 @@ export class AuthController {
         excludeExtraneousValues: true,
       }),
     };
-  }
-
-  @Get()
-  findAll(@Req() req: Request) {
-    throw new NotFoundException('Not found');
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
-    return this.authService.update(+id, updateAuthDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id);
   }
 }

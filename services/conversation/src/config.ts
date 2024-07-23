@@ -13,6 +13,10 @@ export const db = {
   maxPoolSize: parseInt(process.env.DB_MAX_POOL_SIZE || "10"),
 };
 
+export const kafkaConfig = {
+  kafkaHost: process.env.KAFKA_HOST,
+};
+
 export const corsUrl = process.env.CORS_URL;
 
 export const tokenInfo = {

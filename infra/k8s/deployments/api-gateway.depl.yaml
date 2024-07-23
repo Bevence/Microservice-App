@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+  namespace: kafka
+spec:
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      containers:
+      - name: api-gateway
+        image: iambks/api-gateway
+        env:
+          - name: PORT
+            valueFrom:
+              configMapKeyRef:
+                name: api-gateway-config
+                key: PORT
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-gateway-srv
+  namespace: kafka
+spec:
+  selector:
+    app: api-gateway
+  ports:
+  - name: api-gateway
+    protocol: TCP
+    port: 8000
+    targetPort: 8000
+

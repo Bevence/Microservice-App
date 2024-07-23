@@ -2,6 +2,14 @@ apiVersion: skaffold/v4beta10
 kind: Config
 build:
   artifacts:
+    - image: iambks/api-gateway
+      context: services/api-gateway
+      sync:
+        manual:
+          - dest: .
+            src: src/**/*.ts
+      docker:
+        dockerfile: Dockerfile
     - image: iambks/auth
       context: services/auth
       sync:

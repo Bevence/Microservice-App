@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
-import { PrismaService } from 'src/utilities/prisma/prisma.service';
+import { PrismaService } from '../../utilities/prisma/prisma.service';
 import { AuthProducer } from './auth.producer';
-import { KAFKA_EVENT } from 'src/utilities/kafka/kafka.event';
-import { Prisma } from '@prisma/client';
+import { KAFKA_EVENT } from '../../utilities/kafka/kafka.event';
 
 @Injectable()
 export class AuthRepository {
@@ -16,7 +17,7 @@ export class AuthRepository {
   create(payload: CreateAuthDto) {
     try {
       return this.prismaService.$transaction(async (tx) => {
-        const user = await this.prismaService.user.create({
+        const user = await tx.user.create({
           data: payload,
         });
         await this.producer.send({
@@ -27,7 +28,7 @@ export class AuthRepository {
         return user;
       });
     } catch (error) {
-      console.log('error', error);
+      console.log('Error while signing and produce kafka event', error);
       throw error;
     }
   }

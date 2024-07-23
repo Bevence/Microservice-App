@@ -1,10 +1,9 @@
-import { User } from '@prisma/client';
 import { Kafka } from 'kafkajs';
 
-import { KafkaProducerService } from 'src/utilities/kafka/kafka.producer.service';
+import { KafkaProducerService } from '../../utilities/kafka/kafka.producer.service';
 
 const TOPIC = {
-  AUTH_USER: 'AUTH_USER',
+  AUTH_USER: 'auth.user',
 };
 
 export class AuthProducer extends KafkaProducerService {
