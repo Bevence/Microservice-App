@@ -20,19 +20,25 @@ policies:
   - log
   - oauth2
   - proxy
+  - audit-log
   - rate-limit
 pipelines:
   authPipeline:
     apiEndpoints:
       - authApiEndPoints
     policies:
+      - log: &logger
+          - action:
+              message: "${req.method} ${req.originalUrl}"
+      - audit-log:
       - proxy:
           - action:
-              serviceEndpoint: authService 
+              serviceEndpoint: authService
   conversationPipeline:
     apiEndpoints:
       - conversationApiEndpoints
     policies:
+      - log: *logger
       - proxy:
           - action:
               serviceEndpoint: conversationService 
